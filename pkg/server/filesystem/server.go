@@ -113,9 +113,12 @@ func (s *Server) PathExists(ctx context.Context, request *internal.PathExistsReq
 		klog.Errorf("failed check PathExists %v", err)
 		return nil, err
 	}
-	return &internal.PathExistsResponse{
+	response := &internal.PathExistsResponse{
 		Exists: exists,
-	}, err
+	}
+
+	klog.Infof("validation layer response=%v", response)
+	return response, nil
 }
 
 // PathValid checks if the given path is accessiable.

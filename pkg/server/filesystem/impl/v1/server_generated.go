@@ -9,6 +9,7 @@ import (
 	"github.com/kubernetes-csi/csi-proxy/client/apiversion"
 	"github.com/kubernetes-csi/csi-proxy/pkg/server/filesystem/impl"
 	"google.golang.org/grpc"
+	"k8s.io/klog/v2"
 )
 
 var version = apiversion.NewVersionOrPanic("v1")
@@ -100,6 +101,7 @@ func (s *versionedAPI) PathExists(context context.Context, versionedRequest *v1.
 		return nil, err
 	}
 
+	klog.Infof("versioned response=%v", versionedResponse)
 	return versionedResponse, err
 }
 

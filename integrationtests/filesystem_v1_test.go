@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/kubernetes-csi/csi-proxy/client/api/filesystem/v1"
+	v1 "github.com/kubernetes-csi/csi-proxy/client/api/filesystem/v1"
 	v1client "github.com/kubernetes-csi/csi-proxy/client/groups/filesystem/v1"
 )
 
@@ -60,6 +60,12 @@ func v1FilesystemTests(t *testing.T) {
 		exists, err = pathExists(podpath + "\\rootvol")
 		assert.True(t, exists, err)
 
+		pathExistsResponse, err := client.PathExists(context.Background(), &v1.PathExistsRequest{
+			Path: podpath + "\\rootvol",
+		})
+		require.NoError(t, err)
+		assert.True(t, pathExistsResponse.Exists, err)
+
 		// cleanup pvpath
 		rmdirReq := &v1.RmdirRequest{
 			Path:  podpath,
@@ -70,6 +76,12 @@ func v1FilesystemTests(t *testing.T) {
 
 		exists, err = pathExists(podpath)
 		assert.False(t, exists, err)
+
+		pathExistsResponse, err = client.PathExists(context.Background(), &v1.PathExistsRequest{
+			Path: podpath,
+		})
+		require.NoError(t, err)
+		assert.False(t, pathExistsResponse.Exists, err)
 
 		// cleanup plugin path
 		rmdirReq = &v1.RmdirRequest{
